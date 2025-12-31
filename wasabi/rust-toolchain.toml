@@ -1,0 +1,5 @@
+[toolchain]
+channle = "nightly-2024-01-01"
+components = ["rustfmt", "rust-src"]
+targets = ["x86_64-unknown-linux-gnu"]
+profile = "default"
