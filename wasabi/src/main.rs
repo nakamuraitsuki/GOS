@@ -1,9 +1,6 @@
-#![no_std]
-#![no_main]
 #![feature(offset_of)]
 
 use core::arch::asm;
-use core::cmp::min;
 use core::fmt;
 use core::fmt::Write;
 use core::mem::offset_of;
@@ -14,7 +11,6 @@ use core::writeln;
 
 type EfiVoid = u8;
 type EfiHandle = u64;
-type Result<T> = core::result::Result<T, &'static str>;
 
 #[repr(C)]
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
