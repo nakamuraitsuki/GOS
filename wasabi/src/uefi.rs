@@ -106,8 +106,7 @@ impl<'a> Iterator for MemoryMapIterator<'a> {
             None
         } else {
             let e: &EfiMemoryDescriptor = unsafe {
-                &*(self.map.memory_map_buffer.as_ptr().add(self.ofs) 
-                    as *const EfiMemoryDescriptor)
+                &*(self.map.memory_map_buffer.as_ptr().add(self.ofs) as *const EfiMemoryDescriptor)
             };
             self.ofs += self.map.descriptor_size;
             Some(e)
@@ -129,7 +128,7 @@ pub struct EfiBootServicesTable {
         memory_map: *mut u8,
         map_key: *mut usize,
         descriptor_size: *mut usize,
-        descriptor_version: *mut u32
+        descriptor_version: *mut u32,
     ) -> EfiStatus,
     /// プロトコルを探す
     _reserved1: [u64; 21],
@@ -139,7 +138,7 @@ pub struct EfiBootServicesTable {
     locate_protocol: extern "win64" fn(
         protocol: *const EfiGuid,
         registration: *const EfiVoid,
-        interface: *mut *mut EfiVoid
+        interface: *mut *mut EfiVoid,
     ) -> EfiStatus,
 }
 impl EfiBootServicesTable {
@@ -149,7 +148,7 @@ impl EfiBootServicesTable {
             map.memory_map_buffer.as_mut_ptr(),
             &mut map.map_key,
             &mut map.descriptor_size,
-            &mut map.descriptor_version
+            &mut map.descriptor_version,
         )
     }
 }
@@ -198,13 +197,13 @@ struct EfiGraphicsOutputProtocol<'a> {
     pub mode: &'a EfiGraphicsOutputProtocolMode<'a>,
 }
 fn locate_graphic_protocol<'a>(
-    efi_system_table: &EfiSystemTable
+    efi_system_table: &EfiSystemTable,
 ) -> Result<&'a EfiGraphicsOutputProtocol<'a>> {
     let mut graphic_output_protocol = null_mut::<EfiGraphicsOutputProtocol>();
     let status = (efi_system_table.boot_services.locate_protocol)(
         &EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID,
         null_mut::<EfiVoid>(),
-        &mut graphic_output_protocol as *mut *mut EfiGraphicsOutputProtocol as *mut *mut EfiVoid
+        &mut graphic_output_protocol as *mut *mut EfiGraphicsOutputProtocol as *mut *mut EfiVoid,
     );
     if status != EfiStatus::Success {
         return Err("Failed to locate graphics output protocol");
@@ -279,15 +278,13 @@ impl fmt::Write for VramTextWriter<'_> {
 pub fn exit_from_efi_boot_services(
     image_handle: EfiHandle,
     efi_system_table: &EfiSystemTable,
-    memory_map: &mut MemoryMapHolder
+    memory_map: &mut MemoryMapHolder,
 ) {
     loop {
         let status = efi_system_table.boot_services.get_memory_map(memory_map);
         assert_eq!(status, EfiStatus::Success);
-        let status = (efi_system_table.boot_services.exit_boot_services)(
-            image_handle,
-            memory_map.map_key
-        );
+        let status =
+            (efi_system_table.boot_services.exit_boot_services)(image_handle, memory_map.map_key);
         if status == EfiStatus::Success {
             break;
         }
