@@ -8,19 +8,18 @@ pub trait Bitmap {
     fn height(&self) -> i64;
     fn buf_mut(&mut self) -> *mut u8;
     /// # Safety
-    /// 
+    ///
     /// Returned pointer is valid as log as the given coordinates are valid
     /// which means that passing_is_in_*_range tests.
     unsafe fn unchecked_pixel_at_mut(&mut self, x: i64, y: i64) -> *mut u32 {
-    self.buf_mut().add(
-        ((y * self.pixels_per_line() + x) * self.bytes_per_pixel())
-            as usize,
-    ) as *mut u32
+        self.buf_mut()
+            .add(((y * self.pixels_per_line() + x) * self.bytes_per_pixel()) as usize)
+            as *mut u32
     }
     fn pixel_at_mut(&mut self, x: i64, y: i64) -> Option<&mut u32> {
         if self.is_in_x_range(x) && self.is_in_y_range(y) {
             // SAFETY: (x, y) is always validated by the checks above.
-            unsafe { Some(&mut *(self.unchecked_pixel_at_mut(x, y)))}
+            unsafe { Some(&mut *(self.unchecked_pixel_at_mut(x, y))) }
         } else {
             None
         }
@@ -82,14 +81,7 @@ fn calc_slope_point(da: i64, db: i64, ia: i64) -> Option<i64> {
     }
 }
 
-fn draw_line<T: Bitmap>(
-    buf: &mut T, 
-    color: u32, 
-    x0: i64, 
-    y0: i64, 
-    x1: i64, 
-    y1: i64
-) -> Result<()> {
+fn draw_line<T: Bitmap>(buf: &mut T, color: u32, x0: i64, y0: i64, x1: i64, y1: i64) -> Result<()> {
     if !buf.is_in_x_range(x0)
         || !buf.is_in_x_range(x1)
         || !buf.is_in_y_range(y0)
