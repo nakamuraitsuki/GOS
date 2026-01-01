@@ -243,8 +243,6 @@ fn efi_main(image_handle: EfiHandle, efi_system_table: &EfiSystemTable) {
     }
 }
 
-
-
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
     loop {
@@ -287,8 +285,6 @@ fn init_vram(efi_system_table: &EfiSystemTable) -> Result<VramBufferInfo> {
         pixels_per_line: gp.mode.info.pixels_per_scan_line as i64,
     })
 }
-
-
 
 struct VramTextWriter<'a> {
     vram: &'a mut VramBufferInfo,
