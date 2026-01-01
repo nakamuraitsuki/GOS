@@ -1,4 +1,4 @@
-use create::result::Result;
+use crate::result::Result;
 use core::cmp::min;
 
 pub trait Bitmap {
