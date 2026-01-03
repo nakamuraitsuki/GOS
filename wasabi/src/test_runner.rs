@@ -9,7 +9,7 @@ pub trait Testable {
     fn run(&self, writer: &mut SerialPort);
 }
 impl<T> Testable for T
-where 
+where
     T: Fn(),
 {
     fn run(&self, writer: &mut SerialPort) {
