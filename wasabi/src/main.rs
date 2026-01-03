@@ -32,7 +32,7 @@ fn efi_main(image_handle: EfiHandle, efi_system_table: &EfiSystemTable) {
     warn!("warn");
     error!("error");
     hexdump(efi_system_table);
-    
+
     let mut vram = init_vram(efi_system_table).expect("init_vram failed");
     let vw = vram.width();
     let vh = vram.height();
