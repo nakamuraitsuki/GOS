@@ -177,38 +177,36 @@ impl FirstFitAllocator {
         }
     }
     pub fn init_with_mmap(&self, memory_map: &MemoryMapHolder) {
-      for e in memory_map.iter() {
-        if e.memory_type() != EfiMemoryType::CONVENTIONAL_MEMORY {
-          continue;
+        for e in memory_map.iter() {
+            if e.memory_type() != EfiMemoryType::CONVENTIONAL_MEMORY {
+                continue;
+            }
+            self.add_free_from_descriptor(e);
         }
-        self.add_free_from_descriptor(e);
-      }
     }
     fn add_free_from_descriptor(&self, desc: &EfiMemoryDescriptor) {
-      let mut start_addr = desc.physical_start() as usize;
-      let mut size = desc.number_of_pages() as usize * 4096;
-      // Make sure the allocator does not include the address 0 as a free
-      // area.
-      if start_addr == 0 {
-        start_addr *= 4096;
-        size = size.saturating_sub(4096);
-      }
-      if size <= 4096 {
-        return;
-      }
-      let mut header = unsafe {
-          Header::new_from_addr(start_addr)
-      };
-      header.next_header = None;
-      header.is_allocated = false;
-      header.size = size;
-      let mut first_header = self.first_header.borrow_mut();
-      let pref_last = first_header.replace(header);
-      drop(first_header);
-      let mut header = self.first_header.borrow_mut();
-      header.as_mut().unwrap().next_header = pref_last;
-      // It's okey not to be sorted the headers at this point
-      // since all the regions written in memory maps are not contiguous
-      // so that they can't be merged anyway.
+        let mut start_addr = desc.physical_start() as usize;
+        let mut size = desc.number_of_pages() as usize * 4096;
+        // Make sure the allocator does not include the address 0 as a free
+        // area.
+        if start_addr == 0 {
+            start_addr *= 4096;
+            size = size.saturating_sub(4096);
+        }
+        if size <= 4096 {
+            return;
+        }
+        let mut header = unsafe { Header::new_from_addr(start_addr) };
+        header.next_header = None;
+        header.is_allocated = false;
+        header.size = size;
+        let mut first_header = self.first_header.borrow_mut();
+        let pref_last = first_header.replace(header);
+        drop(first_header);
+        let mut header = self.first_header.borrow_mut();
+        header.as_mut().unwrap().next_header = pref_last;
+        // It's okey not to be sorted the headers at this point
+        // since all the regions written in memory maps are not contiguous
+        // so that they can't be merged anyway.
     }
 }
