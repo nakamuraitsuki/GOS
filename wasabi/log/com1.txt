@@ -4,13 +4,13 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting WasabiOS...
 image_handle: 0x00000000BEC4E498
 efi_system_table: 0x00000000bf9ee018
-image_base: 0x00000000BE315000
-image_size: 0x0000000000072000
-[INFO]  src/main.rs:43 : info
+image_base: 0x00000000BE310000
+image_size: 0x0000000000074000
+[INFO]  src/main.rs:44 : info
 
-[WARN]  src/main.rs:44 : warn
+[WARN]  src/main.rs:45 : warn
 
-[ERROR] src/main.rs:45 : error
+[ERROR] src/main.rs:46 : error
 
 00000000: 49 42 49 20 53 59 53 54 46 00 02 00 78 00 00 00 |IBI SYSTF...x...|
 00000010: 8D 13 72 28 00 00 00 00 18 D8 92 BF 00 00 00 00 |..r(............|
@@ -615,31 +615,35 @@ None
 
 [INFO]  src/x86.rs:700: Loading IDTT: IdtParameters { limit: 4096, base: 0x13ff7ee00 }
 
-[INFO]  src/main.rs:85 : Exception initialized!
+[INFO]  src/main.rs:86 : Exception initialized!
 
 [ERROR] src/x86.rs:525: Interrupt Info: 
         {
-            rip: 0x00000000BE32B705, CS: 0x0008,
-            rsp: 0x00000000BFEB0520, SS: 0x0010,
-            rbp: 0x00000000BFEB0520,
+            rip: 0x00000000BE327815, CS: 0x0008,
+            rsp: 0x00000000BFEB02D0, SS: 0x0010,
+            rbp: 0x00000000BFEB02D0,
 
             rflags:     0x0000000000000002,
             error_code: 0x0000000000000000,
 
-            rax: 0x0000000000000000, rcx: 0x00000000BFEB0200,
-            rdx: 0x00000000BE34A828, rbx: 0x00000000BE4E52C8,
+            rax: 0x0000000000000000, rcx: 0x00000000BFEAFF00,
+            rdx: 0x00000000BE346BB8, rbx: 0x00000000BE4E72C8,
             rsi: 0x00000000BE632018, rdi:  0x00000000BE632018,
             r8:  0x0000000000000001, r9:  0x0000000000000004,
-            r10: 0x00000000BE35AE70, r11: 0x0000000000000001,
+            r10: 0x00000000BE3571E0, r11: 0x0000000000000001,
             r12: 0x0000000000000000, r13: 0x0000000000000000,
-            r14: 0x00000000BE4E5218, r15: 0x0000000000000005,
+            r14: 0x00000000BE4E7218, r15: 0x0000000000000005,
         }
 
 [ERROR] src/x86.rs:526: Exception 0x03: 
 
 [ERROR] src/x86.rs:529: Breakpoint
 
-[INFO]  src/main.rs:87 : Execution continued.
+[INFO]  src/main.rs:88 : Execution continued.
 
-[INFO]  src/main.rs:90 : Now we are using our own page tables!
+[INFO]  src/main.rs:91 : Now we are using our own page tables!
+
+[INFO]  src/main.rs:103: Hellow from the async world!
+
+[INFO]  src/main.rs:106: block_on completed! result = Ok(())
 
