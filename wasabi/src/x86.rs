@@ -8,10 +8,10 @@ use core::arch::asm;
 use core::arch::global_asm;
 use core::fmt;
 use core::marker::PhantomData;
-use core::mem::MaybeUninit;
 use core::mem::offset_of;
 use core::mem::size_of;
 use core::mem::size_of_val;
+use core::mem::MaybeUninit;
 use core::pin::Pin;
 
 pub fn hlt() {
@@ -60,8 +60,7 @@ const ATTR_CACHE_DISABLE: u64 = 1 << 4;
 pub enum PageAttr {
     NotPresent = 0,
     ReadWriteKernel = ATTR_PRESENT | ATTR_WRITABLE,
-    ReadWriteIo = 
-        ATTR_PRESENT | ATTR_WRITABLE | ATTR_WRITE_THROUGH | ATTR_CACHE_DISABLE,
+    ReadWriteIo = ATTR_PRESENT | ATTR_WRITABLE | ATTR_WRITE_THROUGH | ATTR_CACHE_DISABLE,
 }
 
 #[derive(Debug, Eq, PartialEq)]
@@ -105,7 +104,7 @@ impl<const LEVEL: usize, const SHIFT: usize, NEXT> Entry<LEVEL, SHIFT, NEXT> {
     fn table(&self) -> Result<&NEXT> {
         if self.is_present() {
             Ok(unsafe { &*((self.value & !ATTR_MASK) as *const NEXT) })
-        } else  {
+        } else {
             Err("Page Not Found")
         }
     }
@@ -128,10 +127,8 @@ impl<const LEVEL: usize, const SHIFT: usize, NEXT> Entry<LEVEL, SHIFT, NEXT> {
         if self.is_present() {
             Err("Page is already populated")
         } else {
-            let next: Box<NEXT> =
-                Box::new(unsafe { MaybeUninit::zeroed().assume_init() });
-            self.value =
-                Box::into_raw(next) as u64 | PageAttr::ReadWriteKernel as u64;
+            let next: Box<NEXT> = Box::new(unsafe { MaybeUninit::zeroed().assume_init() });
+            self.value = Box::into_raw(next) as u64 | PageAttr::ReadWriteKernel as u64;
             Ok(self)
         }
     }
@@ -143,16 +140,12 @@ impl<const LEVEL: usize, const SHIFT: usize, NEXT> Entry<LEVEL, SHIFT, NEXT> {
         }
     }
 }
-impl<const LEVEL: usize, const SHIFT: usize, NEXT> fmt::Display
-    for Entry<LEVEL, SHIFT, NEXT>
-{
+impl<const LEVEL: usize, const SHIFT: usize, NEXT> fmt::Display for Entry<LEVEL, SHIFT, NEXT> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.format(f)
     }
 }
-impl<const LEVEL: usize, const SHIFT: usize, NEXT> fmt::Debug
-    for Entry<LEVEL, SHIFT, NEXT>
-{
+impl<const LEVEL: usize, const SHIFT: usize, NEXT> fmt::Debug for Entry<LEVEL, SHIFT, NEXT> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.format(f)
     }
@@ -162,9 +155,7 @@ impl<const LEVEL: usize, const SHIFT: usize, NEXT> fmt::Debug
 pub struct Table<const LEVEL: usize, const SHIFT: usize, NEXT> {
     entry: [Entry<LEVEL, SHIFT, NEXT>; 512],
 }
-impl<const LEVEL: usize, const SHIFT: usize, NEXT: core::fmt::Debug>
-    Table<LEVEL, SHIFT, NEXT>
-{
+impl<const LEVEL: usize, const SHIFT: usize, NEXT: core::fmt::Debug> Table<LEVEL, SHIFT, NEXT> {
     fn format(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "L{}Table @ {:#p} {{", LEVEL, self)?;
         for i in 0..512 {
@@ -659,7 +650,7 @@ impl Idt {
             // Set DPL=3 to allow user land to make tthis interrupt (e.g. via
             // int3 op)
             IdtAttr::IntGateDPL3,
-        interrupt_entrypoint3,
+            interrupt_entrypoint3,
         );
         entries[6] = IdtDescriptor::new(
             segment_selector,
@@ -694,7 +685,7 @@ impl Idt {
         let limit = size_of_val(&entries) as u16;
         let entries = Box::pin(entries);
         let params = IdtParameters {
-            limit, 
+            limit,
             base: entries.as_ptr(),
         };
         info!("Loading IDTT: {params:?}");
@@ -714,7 +705,7 @@ struct TaskStateSegment64Inner {
     _rsp: [u64; 3], // for switch into ring0-2
     _ist: [u64; 8], // ist[1]~ist[7] (ist[0] is reserved)
     _reserved1: [u16; 5],
-    _io_map_base_addr: u16 ,
+    _io_map_base_addr: u16,
 }
 const _: () = assert!(size_of::<TaskStateSegment64Inner>() == 104);
 
@@ -787,8 +778,7 @@ pub const BIT_DPL3: u64 = 3u64 << 45;
 
 #[repr(u64)]
 enum GdtAttr {
-    KernelCode =
-        BIT_TYPE_CODE | BIT_PRESENT | BIT_CS_LONG_MODE | BIT_CS_READABLE ,
+    KernelCode = BIT_TYPE_CODE | BIT_PRESENT | BIT_CS_LONG_MODE | BIT_CS_READABLE,
     KernelData = BIT_TYPE_DATA | BIT_PRESENT | BIT_DS_WRITABLE,
 }
 
@@ -846,9 +836,7 @@ impl Default for GdtWrapper {
             null_segment: GdtSegmentDescriptor::null(),
             kernel_code_segment: GdtSegmentDescriptor::new(GdtAttr::KernelCode),
             kernel_data_segment: GdtSegmentDescriptor::new(GdtAttr::KernelData),
-            task_state_segment: TaskStateSegment64Descriptor::new(
-                tss64.phys_addr(),
-            ),
+            task_state_segment: TaskStateSegment64Descriptor::new(tss64.phys_addr()),
         };
         let gdt = Box::pin(gdt);
         GdtWrapper { inner: gdt, tss64 }

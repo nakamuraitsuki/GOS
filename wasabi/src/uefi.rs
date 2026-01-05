@@ -198,10 +198,7 @@ impl EfiSystemTable {
     pub fn boot_services(&self) -> &EfiBootServicesTable {
         self.boot_services
     }
-    fn lookup_config_table(
-        &self,
-        guid: &EfiGuid,
-    ) -> Option<EfiConfigurationTable> {
+    fn lookup_config_table(&self, guid: &EfiGuid) -> Option<EfiConfigurationTable> {
         for i in 0..self.number_of_table_entries {
             let ct = unsafe { &*self.configuration_table.add(i) };
             if ct.vendor_guid == *guid {
@@ -272,8 +269,7 @@ pub fn locate_loaded_image_protocol(
     let status = (efi_system_table.boot_services.handle_protocol)(
         image_handle,
         &EFI_LOADED_IMAGE_PROTOCOL_GUID,
-        &mut graphic_output_protocol as *mut *mut EfiLoadedImageProtocol
-            as *mut *mut EfiVoid,
+        &mut graphic_output_protocol as *mut *mut EfiLoadedImageProtocol as *mut *mut EfiVoid,
     );
     if status != EfiStatus::Success {
         return Err("Failed to locate graphics output protocol");

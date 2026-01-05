@@ -32,8 +32,7 @@ pub fn init_paging(memory_map: &MemoryMapHolder) {
             CONVENTIONAL_MEMORY | LOADER_CODE | LOADER_DATA => {
                 end_of_mem = max(
                     end_of_mem,
-                    e.physical_start()
-                        + e.number_of_pages() * (PAGE_SIZE as u64),
+                    e.physical_start() + e.number_of_pages() * (PAGE_SIZE as u64),
                 );
             }
             _ => (),
