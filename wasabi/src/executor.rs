@@ -91,8 +91,7 @@ impl Executor {
     fn run(executor: &Mutex<Option<Self>>) -> ! {
         info!("Executor starts running...");
         loop {
-            let task = 
-                executor.lock().as_mut().map(|e| e.task_queue().pop_front());
+            let task = executor.lock().as_mut().map(|e| e.task_queue().pop_front());
             if let Some(Some(mut task)) = task {
                 let waker = no_op_waker();
                 let mut context = Context::from_waker(&waker);

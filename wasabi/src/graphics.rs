@@ -200,13 +200,7 @@ impl<T: Bitmap> fmt::Write for BitmapTextWriter<T> {
                 self.cursor_x = 0;
                 continue;
             }
-            draw_font_fg(
-                &mut self.buf, 
-                self.cursor_x, 
-                self.cursor_y, 
-                0xffffff, 
-                c,
-            );
+            draw_font_fg(&mut self.buf, self.cursor_x, self.cursor_y, 0xffffff, c);
             self.cursor_x += 8;
         }
         Ok(())

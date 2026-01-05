@@ -6,8 +6,7 @@ use core::fmt;
 use core::mem::size_of;
 use core::slice;
 
-static GLOBAL_VRAM_WRITER: Mutex<Option<BitmapTextWriter<VramBufferInfo>>> =
-    Mutex::new(None);
+static GLOBAL_VRAM_WRITER: Mutex<Option<BitmapTextWriter<VramBufferInfo>>> = Mutex::new(None);
 pub fn set_global_vram(vram: VramBufferInfo) {
     assert!(GLOBAL_VRAM_WRITER.lock().is_none());
     let w = BitmapTextWriter::new(vram);

@@ -164,7 +164,7 @@ pub struct AcpiMcfgDescriptor {
     // [EcamEntry; ?]
 }
 impl AcpiTable for AcpiMcfgDescriptor {
-    const SIGNATURE: &'static [u8; 4] =  b"MCFG";
+    const SIGNATURE: &'static [u8; 4] = b"MCFG";
     type Table = Self;
 }
 const _: () = assert!(size_of::<AcpiMcfgDescriptor>() == 44);
@@ -173,16 +173,14 @@ impl AcpiMcfgDescriptor {
         size_of::<Self>()
     }
     pub fn num_of_entries(&self) -> usize {
-        (self.header.length as usize - self.header_size())
-            / size_of::<EcamEntry>()
+        (self.header.length as usize - self.header_size()) / size_of::<EcamEntry>()
     }
     pub fn entry(&self, index: usize) -> Option<&EcamEntry> {
         if index >= self.num_of_entries() {
             None
         } else {
             Some(unsafe {
-                &*((self as *const Self as *const u8).add(self.header_size())
-                    as *const EcamEntry)
+                &*((self as *const Self as *const u8).add(self.header_size()) as *const EcamEntry)
                     .add(index)
             })
         }
