@@ -4,13 +4,13 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting WasabiOS...
 image_handle: 0x00000000BEC4E498
 efi_system_table: 0x00000000bf9ee018
-image_base: 0x00000000BE2FE000
-image_size: 0x000000000007D000
-[INFO]  src/main.rs:46 : info
+image_base: 0x00000000BE2F3000
+image_size: 0x0000000000082000
+[INFO]  src/main.rs:47 : info
 
-[WARN]  src/main.rs:47 : warn
+[WARN]  src/main.rs:48 : warn
 
-[ERROR] src/main.rs:48 : error
+[ERROR] src/main.rs:49 : error
 
 00000000: 49 42 49 20 53 59 53 54 46 00 02 00 78 00 00 00 |IBI SYSTF...x...|
 00000010: 8D 13 72 28 00 00 00 00 18 D8 92 BF 00 00 00 00 |..r(............|
@@ -608,63 +608,63 @@ Some(L2Table @ 0x00000000bfc03000 {
 }
 )
 None
-[INFO]  src/x86.rs:753: TSS64 created @ 0x13FF7FE80
+[INFO]  src/x86.rs:744: TSS64 created @ 0x13FF7FE80
 
-[INFO]  src/x86.rs:828: Loading GDT @ 0x000000013FF7FE20
+[INFO]  src/x86.rs:818: Loading GDT @ 0x000000013FF7FE20
 
-[INFO]  src/x86.rs:835: Loading TSS ( selector = 0x18
+[INFO]  src/x86.rs:825: Loading TSS ( selector = 0x18
 
-[INFO]  src/x86.rs:700: Loading IDTT: IdtParameters { limit: 4096, base: 0x13ff7ee00 }
+[INFO]  src/x86.rs:691: Loading IDTT: IdtParameters { limit: 4096, base: 0x13ff7ee00 }
 
-[INFO]  src/main.rs:89 : Exception initialized!
+[INFO]  src/main.rs:90 : Exception initialized!
 
-[ERROR] src/x86.rs:525: Interrupt Info: 
+[ERROR] src/x86.rs:516: Interrupt Info: 
         {
-            rip: 0x00000000BE317945, CS: 0x0008,
-            rsp: 0x00000000BFEB01A0, SS: 0x0010,
-            rbp: 0x00000000BFEB01A0,
+            rip: 0x00000000BE30D005, CS: 0x0008,
+            rsp: 0x00000000BFEB0170, SS: 0x0010,
+            rbp: 0x00000000BFEB0170,
 
-            rflags:     0x0000000000000006,
+            rflags:     0x0000000000000002,
             error_code: 0x0000000000000000,
 
             rax: 0x0000000000000000, rcx: 0x00000000BFEAFE00,
-            rdx: 0x00000000BE33BEC8, rbx: 0x00000000BE4E72C8,
+            rdx: 0x00000000BE334FE8, rbx: 0x00000000BE4E72C8,
             rsi: 0x00000000BE632018, rdi:  0x00000000BE632018,
             r8:  0x0000000000000001, r9:  0x0000000000000004,
-            r10: 0x00000000BE34DAB0, r11: 0x0000000000000001,
+            r10: 0x00000000BE3479F0, r11: 0x0000000000000001,
             r12: 0x0000000000000000, r13: 0x0000000000000000,
             r14: 0x00000000BE4E7218, r15: 0x0000000000000005,
         }
 
-[ERROR] src/x86.rs:526: Exception 0x03: 
+[ERROR] src/x86.rs:517: Exception 0x03: 
 
-[ERROR] src/x86.rs:529: Breakpoint
+[ERROR] src/x86.rs:520: Breakpoint
 
-[INFO]  src/main.rs:91 : Execution continued.
+[INFO]  src/main.rs:92 : Execution continued.
 
-[INFO]  src/main.rs:94 : Now we are using our own page tables!
+[INFO]  src/main.rs:95 : Now we are using our own page tables!
 
-[INFO]  src/main.rs:109: HPET is at 0x00000000fed00000
+[INFO]  src/main.rs:110: HPET is at 0x00000000fed00000
 
-[INFO]  src/executor.rs:91 : Executor starts running...
+[INFO]  src/executor.rs:89 : Executor starts running...
 
-[INFO]  src/main.rs:114: 100 hpet.main_counter = 239858
+[INFO]  src/main.rs:117: 100 hpet.main_counter = 2.59925ms
 
-[INFO]  src/main.rs:121: 200
+[INFO]  src/main.rs:124: 200 hpet.main_counter = 4.62505ms
 
-[INFO]  src/main.rs:114: 101 hpet.main_counter = 365249
+[INFO]  src/main.rs:117: 101 hpet.main_counter = 5.17379ms
 
-[INFO]  src/main.rs:121: 201
+[INFO]  src/main.rs:124: 201 hpet.main_counter = 5.55766ms
 
-[INFO]  src/main.rs:114: 102 hpet.main_counter = 417791
+[INFO]  src/main.rs:117: 102 hpet.main_counter = 5.88495ms
 
-[INFO]  src/main.rs:121: 202
+[INFO]  src/main.rs:124: 202 hpet.main_counter = 6.19182ms
 
-[INFO]  src/main.rs:114: 103 hpet.main_counter = 461161
+[INFO]  src/main.rs:117: 103 hpet.main_counter = 6.51228ms
 
-[INFO]  src/main.rs:121: 203
+[INFO]  src/main.rs:124: 203 hpet.main_counter = 6.82077ms
 
-[INFO]  src/executor.rs:99 : Task completed: Task(src/main.rs:112): Ok(())
+[INFO]  src/executor.rs:97 : Task completed: Task(src/main.rs:115): Ok(())
 
-[INFO]  src/executor.rs:99 : Task completed: Task(src/main.rs:119): Ok(())
+[INFO]  src/executor.rs:97 : Task completed: Task(src/main.rs:122): Ok(())
 
