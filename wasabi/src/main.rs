@@ -12,6 +12,7 @@ use wasabi::executor::Task;
 use wasabi::graphics::draw_test_pattern;
 use wasabi::graphics::fill_rect;
 use wasabi::graphics::Bitmap;
+use wasabi::hpet::Hpet;
 use wasabi::info;
 use wasabi::init::init_basic_runtime;
 use wasabi::init::init_paging;
@@ -31,6 +32,8 @@ use wasabi::x86::init_exceptions;
 use wasabi::x86::read_cr3;
 use wasabi::x86::trigger_debug_interrupt;
 use wasabi::x86::PageAttr;
+
+static mut GLOBAL_HPET: Option<Hpet> = None;
 
 #[no_mangle]
 fn efi_main(image_handle: EfiHandle, efi_system_table: &EfiSystemTable) {
@@ -105,18 +108,20 @@ fn efi_main(image_handle: EfiHandle, efi_system_table: &EfiSystemTable) {
     let hpet = hpet
         .base_address()
         .expect("Failed to get HPET base address");
-    info!("HPET is at {hpet:#018X}");
+    info!("HPET is at {hpet:#p}");
+    let hpet = Hpet::new(hpet);
+    let hpet = unsafe { GLOBAL_HPET.insert(hpet) };
 
-    let task1 = Task::new(async move {
+    let task1 = Task::new(async {
         for i in 100..=103 {
-            info!("{i}");
+            info!("{i} hpet.main_counter = {}", hpet.main_counter());
             yield_execution().await;
         }
         Ok(())
     });
     let task2 = Task::new(async{
         for i in 200..=203 {
-            info!("{i}");
+            info!("{i} hpet.main_counter = {}", hpet.main_counter());
             yield_execution().await;
         }
         Ok(())

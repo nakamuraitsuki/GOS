@@ -4,13 +4,13 @@ BdsDxe: starting Boot0002 "UEFI QEMU HARDDISK QM00001 " from PciRoot(0x0)/Pci(0x
 Booting WasabiOS...
 image_handle: 0x00000000BEC4E498
 efi_system_table: 0x00000000bf9ee018
-image_base: 0x00000000BE2FF000
-image_size: 0x000000000007C000
-[INFO]  src/main.rs:45 : info
+image_base: 0x00000000BE2FE000
+image_size: 0x000000000007D000
+[INFO]  src/main.rs:46 : info
 
-[WARN]  src/main.rs:46 : warn
+[WARN]  src/main.rs:47 : warn
 
-[ERROR] src/main.rs:47 : error
+[ERROR] src/main.rs:48 : error
 
 00000000: 49 42 49 20 53 59 53 54 46 00 02 00 78 00 00 00 |IBI SYSTF...x...|
 00000010: 8D 13 72 28 00 00 00 00 18 D8 92 BF 00 00 00 00 |..r(............|
@@ -616,22 +616,22 @@ None
 
 [INFO]  src/x86.rs:700: Loading IDTT: IdtParameters { limit: 4096, base: 0x13ff7ee00 }
 
-[INFO]  src/main.rs:88 : Exception initialized!
+[INFO]  src/main.rs:89 : Exception initialized!
 
 [ERROR] src/x86.rs:525: Interrupt Info: 
         {
-            rip: 0x00000000BE3183D5, CS: 0x0008,
-            rsp: 0x00000000BFEB01D0, SS: 0x0010,
-            rbp: 0x00000000BFEB01D0,
+            rip: 0x00000000BE317945, CS: 0x0008,
+            rsp: 0x00000000BFEB01A0, SS: 0x0010,
+            rbp: 0x00000000BFEB01A0,
 
-            rflags:     0x0000000000000002,
+            rflags:     0x0000000000000006,
             error_code: 0x0000000000000000,
 
             rax: 0x0000000000000000, rcx: 0x00000000BFEAFE00,
-            rdx: 0x00000000BE33BE78, rbx: 0x00000000BE4E72C8,
+            rdx: 0x00000000BE33BEC8, rbx: 0x00000000BE4E72C8,
             rsi: 0x00000000BE632018, rdi:  0x00000000BE632018,
             r8:  0x0000000000000001, r9:  0x0000000000000004,
-            r10: 0x00000000BE34D8E0, r11: 0x0000000000000001,
+            r10: 0x00000000BE34DAB0, r11: 0x0000000000000001,
             r12: 0x0000000000000000, r13: 0x0000000000000000,
             r14: 0x00000000BE4E7218, r15: 0x0000000000000005,
         }
@@ -640,31 +640,31 @@ None
 
 [ERROR] src/x86.rs:529: Breakpoint
 
-[INFO]  src/main.rs:90 : Execution continued.
+[INFO]  src/main.rs:91 : Execution continued.
 
-[INFO]  src/main.rs:93 : Now we are using our own page tables!
+[INFO]  src/main.rs:94 : Now we are using our own page tables!
 
-[INFO]  src/main.rs:108: HPET is at 0x00000000FED00000
+[INFO]  src/main.rs:109: HPET is at 0x00000000fed00000
 
 [INFO]  src/executor.rs:91 : Executor starts running...
 
-[INFO]  src/main.rs:112: 100
+[INFO]  src/main.rs:114: 100 hpet.main_counter = 239858
 
-[INFO]  src/main.rs:119: 200
+[INFO]  src/main.rs:121: 200
 
-[INFO]  src/main.rs:112: 101
+[INFO]  src/main.rs:114: 101 hpet.main_counter = 365249
 
-[INFO]  src/main.rs:119: 201
+[INFO]  src/main.rs:121: 201
 
-[INFO]  src/main.rs:112: 102
+[INFO]  src/main.rs:114: 102 hpet.main_counter = 417791
 
-[INFO]  src/main.rs:119: 202
+[INFO]  src/main.rs:121: 202
 
-[INFO]  src/main.rs:112: 103
+[INFO]  src/main.rs:114: 103 hpet.main_counter = 461161
 
-[INFO]  src/main.rs:119: 203
+[INFO]  src/main.rs:121: 203
 
-[INFO]  src/executor.rs:99 : Task completed: Task(src/main.rs:110): Ok(())
+[INFO]  src/executor.rs:99 : Task completed: Task(src/main.rs:112): Ok(())
 
-[INFO]  src/executor.rs:99 : Task completed: Task(src/main.rs:117): Ok(())
+[INFO]  src/executor.rs:99 : Task completed: Task(src/main.rs:119): Ok(())
 
