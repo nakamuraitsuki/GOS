@@ -2,15 +2,12 @@
 #![no_main]
 #![feature(offset_of)]
 
-use core::fmt::Write;
 use core::panic::PanicInfo;
 use core::time::Duration;
-use core::writeln;
 use wasabi::error;
 use wasabi::executor::Executor;
 use wasabi::executor::Task;
 use wasabi::executor::TimeoutFuture;
-use wasabi::graphics::BitmapTextWriter;
 use wasabi::hpet::global_timestamp;
 use wasabi::info;
 use wasabi::init::init_allocator;
