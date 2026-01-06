@@ -53,6 +53,7 @@ pub const PAGE_SIZE: usize = 4096;
 pub const ATTR_MASK: u64 = 0xFFF;
 const ATTR_PRESENT: u64 = 1 << 0;
 const ATTR_WRITABLE: u64 = 1 << 1;
+const ATTR_USER: u64 = 1 << 2;
 const ATTR_WRITE_THROUGH: u64 = 1 << 3;
 const ATTR_CACHE_DISABLE: u64 = 1 << 4;
 
@@ -62,6 +63,9 @@ pub enum PageAttr {
     NotPresent = 0,
     ReadWriteKernel = ATTR_PRESENT | ATTR_WRITABLE,
     ReadWriteIo = ATTR_PRESENT | ATTR_WRITABLE | ATTR_WRITE_THROUGH | ATTR_CACHE_DISABLE,
+
+    ReadWriteUser = ATTR_PRESENT | ATTR_WRITABLE | ATTR_USER,
+    ReadOnlyUser = ATTR_PRESENT | ATTR_USER,
 }
 
 #[derive(Debug, Eq, PartialEq)]
@@ -129,7 +133,7 @@ impl<const LEVEL: usize, NEXT> Entry<LEVEL, NEXT> {
             Err("Page is already populated")
         } else {
             let next: Box<NEXT> = Box::new(unsafe { MaybeUninit::zeroed().assume_init() });
-            self.value = Box::into_raw(next) as u64 | PageAttr::ReadWriteKernel as u64;
+            self.value = Box::into_raw(next) as u64 | PageAttr::ReadWriteUser as u64;
             Ok(self)
         }
     }
