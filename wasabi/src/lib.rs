@@ -10,6 +10,7 @@
 #![no_main]
 pub mod acpi;
 pub mod allocator;
+pub mod elf;
 pub mod executor;
 pub mod graphics;
 pub mod hpet;
