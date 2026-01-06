@@ -50,7 +50,7 @@ pub fn read_cr3() -> *mut PML4 {
 }
 
 pub const PAGE_SIZE: usize = 4096;
-const ATTR_MASK: u64 = 0xFFF;
+pub const ATTR_MASK: u64 = 0xFFF;
 const ATTR_PRESENT: u64 = 1 << 0;
 const ATTR_WRITABLE: u64 = 1 << 1;
 const ATTR_WRITE_THROUGH: u64 = 1 << 3;

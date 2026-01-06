@@ -1,5 +1,7 @@
 extern crate alloc;
 
+pub mod loader;
+
 use alloc::vec::Vec;
 use core::mem::size_of;
 
@@ -72,7 +74,7 @@ impl Elf64ProgramHeader {
         let mut headers = Vec::new();
         let offset = header.phoff as usize;
         let size = header.phentsize as usize;
-        
+
         for i in 0..header.phnum as usize {
             let start = offset + i * size;
             if start + size <= data.len() {
@@ -80,7 +82,7 @@ impl Elf64ProgramHeader {
                 headers.push(ph);
             }
         }
-        
+
         headers
     }
 }
