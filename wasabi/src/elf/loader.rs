@@ -2,6 +2,7 @@ extern crate alloc;
 
 use crate::elf::Elf64Header;
 use crate::elf::Elf64ProgramHeader;
+use crate::elf::PF_W;
 use crate::elf::PT_LOAD;
 use crate::info;
 use crate::result::Result;
@@ -32,6 +33,13 @@ pub fn load_elf(data: &[u8]) -> Result<u64> {
 
                 // マッピング
 
+                // 属性の決定
+                let attr = if ph.p_flags &  PF_W != 0 {
+                    PageAttr::ReadWriteUser
+                } else {
+                    PageAttr::ReadOnlyUser
+                };
+
                 // ページ数の計算
                 let vaddr_start = ph.p_vaddr & !ATTR_MASK;
                 let vaddr_end = (ph.p_vaddr + ph.p_memsz + ATTR_MASK) & !ATTR_MASK;
@@ -49,7 +57,7 @@ pub fn load_elf(data: &[u8]) -> Result<u64> {
                         vaddr_start + (i * PAGE_SIZE) as u64,
                         vaddr_start + ((i + 1) * PAGE_SIZE) as u64,
                         phys_addr,
-                        PageAttr::ReadWriteKernel,
+                        attr,
                     )
                     .expect("Failed to map page");
                 }
