@@ -2,6 +2,8 @@
 #![no_main]
 #![feature(offset_of)]
 
+extern crate alloc;
+
 use core::panic::PanicInfo;
 use core::time::Duration;
 use wasabi::error;
@@ -21,13 +23,21 @@ use wasabi::print::set_global_vram;
 use wasabi::println;
 use wasabi::qemu::exit_qemu;
 use wasabi::qemu::QemuExitCode;
+use wasabi::result::Result;
 use wasabi::serial::SerialPort;
 use wasabi::uefi::init_vram;
 use wasabi::uefi::locate_loaded_image_protocol;
 use wasabi::uefi::EfiHandle;
 use wasabi::uefi::EfiSystemTable;
 use wasabi::warn;
+use wasabi::x86::PAGE_SIZE;
+use wasabi::x86::PT;
+use wasabi::x86::PageAttr;
 use wasabi::x86::init_exceptions;
+use wasabi::x86::with_current_page_table;
+use alloc::boxed::Box;
+
+static DUMMY_USER_PROG: [u8; 2] = [0xEB, 0xFE]; // jmp $ (無限ループ)
 
 #[no_mangle]
 fn efi_main(image_handle: EfiHandle, efi_system_table: &EfiSystemTable) {
@@ -96,6 +106,7 @@ fn efi_main(image_handle: EfiHandle, efi_system_table: &EfiSystemTable) {
     spawn_global(task1);
     spawn_global(task2);
     spawn_global(serial_task);
+    spawn_global(test_user_mode_entry());
     start_global_executor();
 }
 
@@ -103,4 +114,53 @@ fn efi_main(image_handle: EfiHandle, efi_system_table: &EfiSystemTable) {
 fn panic(info: &PanicInfo) -> ! {
     error!("PANIC: {info:?}");
     exit_qemu(QemuExitCode::Fail);
+}
+
+// デバッグ用
+pub async fn test_user_mode_entry() -> Result<()> {
+    info!("Preparing for Ring 3 transition test...");
+
+    let user_rip: u64 = 0x1000_0000;  // 適当なユーザー空間アドレス
+    let user_rsp_base: u64 = 0x2000_0000;
+    let stack_size: u64 = 0x2000;    // 8KB
+
+unsafe {
+        with_current_page_table(|pml4| {
+            // 1. コード領域のマッピング
+            // [u8; PAGE_SIZE] ではなく、align(4096) が保証された PT 型として確保
+            let code_frame: Box<PT> = Box::new(core::mem::zeroed());
+            let code_ptr = Box::into_raw(code_frame);
+            
+            // deref してデータを書き込む
+            let code_slice = unsafe { &mut *(code_ptr as *mut [u8; PAGE_SIZE]) };
+            code_slice[0..2].copy_from_slice(&DUMMY_USER_PROG);
+            
+            pml4.create_mapping(
+                user_rip,
+                user_rip + PAGE_SIZE as u64,
+                code_ptr as u64, // これで 0x...000 になる
+                PageAttr::ReadWriteUser,
+            ).expect("Failed to map user code");
+
+            // 2. スタック領域のマッピング
+            for i in 0..2 {
+                let stack_frame: Box<PT> = Box::new(core::mem::zeroed());
+                let stack_ptr = Box::into_raw(stack_frame);
+                
+                pml4.create_mapping(
+                    user_rsp_base + (i * PAGE_SIZE as u64),
+                    user_rsp_base + ((i + 1) * PAGE_SIZE as u64),
+                    stack_ptr as u64,
+                    PageAttr::ReadWriteUser,
+                ).expect("Failed to map user stack");
+            }
+        });
+    }
+
+    let user_rsp_top = user_rsp_base + stack_size;
+    info!("Jumping to Ring 3! (RIP: {:#x}, RSP: {:#x})", user_rip, user_rsp_top);
+
+    unsafe {
+        wasabi::x86::jump_to_user_mode(user_rip, user_rsp_top);
+    }
 }

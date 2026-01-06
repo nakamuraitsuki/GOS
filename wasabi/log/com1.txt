@@ -5,12 +5,12 @@ Booting WasabiOS...
 image_handle: 0x000000007EBBAB98
 efi_system_table: 0x000000007f9ee018
 image_base: 0x0000000140000000
-image_size: 0x0000000000083000
-[INFO]  src/main.rs:41 : info
+image_size: 0x0000000000085000
+[INFO]  src/main.rs:51 : info
 
-[WARN]  src/main.rs:42 : warn
+[WARN]  src/main.rs:52 : warn
 
-[ERROR] src/main.rs:43 : error
+[ERROR] src/main.rs:53 : error
 
 00000000: 49 42 49 20 53 59 53 54 46 00 02 00 78 00 00 00 |IBI SYSTF...x...|
 00000010: 79 B6 A1 EB 00 00 00 00 18 D8 92 7F 00 00 00 00 |y...............|
@@ -20,7 +20,7 @@ image_size: 0x0000000000083000
 00000050: F0 C0 D1 7E 00 00 00 00 98 EB 9E 7F 00 00 00 00 |...~............|
 00000060: 40 01 ED 7F 00 00 00 00 0C 00 00 00 00 00 00 00 |@...............|
 00000070: 98 EC 9E 7F 00 00 00 00                         |.......|
-[INFO]  src/main.rs:52 : Hellow Non-UEFI World!
+[INFO]  src/main.rs:62 : Hellow Non-UEFI World!
 
 [INFO]  src/init.rs:80 : EfiMemoryDescriptor { memory_type: CONVENTIONAL_MEMORY, physical_start: 4096, virtual_start: 0, number_of_pages: 159, attribute: 15 }
 
@@ -40,17 +40,17 @@ image_size: 0x0000000000083000
 
 [INFO]  src/init.rs:80 : EfiMemoryDescriptor { memory_type: CONVENTIONAL_MEMORY, physical_start: 4294967296, virtual_start: 0, number_of_pages: 262144, attribute: 15 }
 
-[INFO]  src/init.rs:80 : EfiMemoryDescriptor { memory_type: CONVENTIONAL_MEMORY, physical_start: 5369245696, virtual_start: 0, number_of_pages: 262013, attribute: 15 }
+[INFO]  src/init.rs:80 : EfiMemoryDescriptor { memory_type: CONVENTIONAL_MEMORY, physical_start: 5369253888, virtual_start: 0, number_of_pages: 262011, attribute: 15 }
 
-[INFO]  src/init.rs:83 : Total: 1037675 pages = 4053 MiB
+[INFO]  src/init.rs:83 : Total: 1037673 pages = 4053 MiB
 
-[INFO]  src/x86.rs:759: TSS64 created @ 0x17FF7FE80
+[INFO]  src/x86.rs:763: TSS64 created @ 0x17FF7FE80
 
-[INFO]  src/x86.rs:833: Loading GDT @ 0x000000017FF7FE20
+[INFO]  src/x86.rs:843: Loading GDT @ 0x000000017FF7FE20
 
-[INFO]  src/x86.rs:840: Loading TSS ( selector = 0x18
+[INFO]  src/x86.rs:850: Loading TSS ( selector = 0x28
 
-[INFO]  src/x86.rs:706: Loading IDTT: IdtParameters { limit: 4096, base: 0x17ff7ee00 }
+[INFO]  src/x86.rs:710: Loading IDTT: IdtParameters { limit: 4096, base: 0x17ff7ee00 }
 
 [INFO]  src/init.rs:68 : Hpet is at 0x00000000fed00000
 
@@ -80,25 +80,13 @@ image_size: 0x0000000000083000
 
 [INFO]  src/executor.rs:92 : Executor starts running...
 
-[INFO]  src/main.rs:67 : 100 hpet.main_counter = 8.28338ms
+[INFO]  src/main.rs:77 : 100 hpet.main_counter = 8.51336ms
 
-[INFO]  src/main.rs:74 : 200 hpet.main_counter = 12.32469ms
+[INFO]  src/main.rs:84 : 200 hpet.main_counter = 12.5635ms
 
-[INFO]  src/main.rs:86 : Started to monitor serial port
+[INFO]  src/main.rs:96 : Started to monitor serial port
 
-[INFO]  src/main.rs:67 : 101 hpet.main_counter = 1.01195907s
+[INFO]  src/main.rs:121: Preparing for Ring 3 transition test...
 
-[INFO]  src/main.rs:67 : 102 hpet.main_counter = 2.01437568s
-
-[INFO]  src/main.rs:74 : 201 hpet.main_counter = 2.01678168s
-
-[INFO]  src/main.rs:67 : 103 hpet.main_counter = 3.01676786s
-
-[INFO]  src/main.rs:74 : 202 hpet.main_counter = 4.01908637s
-
-[INFO]  src/executor.rs:100: Task completed: Task(src/main.rs:96): Ok(())
-
-[INFO]  src/main.rs:74 : 203 hpet.main_counter = 6.02147158s
-
-[INFO]  src/executor.rs:100: Task completed: Task(src/main.rs:97): Ok(())
+[INFO]  src/main.rs:161: Jumping to Ring 3! (RIP: 0x10000000, RSP: 0x20002000)
 
