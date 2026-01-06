@@ -799,6 +799,8 @@ pub const BIT_DPL3: u64 = 3u64 << 45;
 enum GdtAttr {
     KernelCode = BIT_TYPE_CODE | BIT_PRESENT | BIT_CS_LONG_MODE | BIT_CS_READABLE,
     KernelData = BIT_TYPE_DATA | BIT_PRESENT | BIT_DS_WRITABLE,
+    UserCode = BIT_TYPE_CODE | BIT_PRESENT | BIT_CS_LONG_MODE | BIT_CS_READABLE | BIT_DPL3,
+    UserData = BIT_TYPE_DATA | BIT_PRESENT | BIT_DS_WRITABLE | BIT_DPL3,
 }
 
 #[allow(dead_code)]
@@ -810,7 +812,9 @@ struct GdtrParameters {
 
 pub const KERNEL_CS: u16 = 1 << 3;
 pub const KERNEL_DS: u16 = 2 << 3;
-pub const TSS64_SEL: u16 = 3 << 3;
+pub const USER_DS: u16 = (3 << 3) | 3;
+pub const USER_CS: u16 = (4 << 3) | 3;
+pub const TSS64_SEL: u16 = 5 << 3;
 
 #[allow(dead_code)]
 #[repr(C, packed)]
@@ -818,9 +822,11 @@ pub struct Gdt {
     null_segment: GdtSegmentDescriptor,
     kernel_code_segment: GdtSegmentDescriptor,
     kernel_data_segment: GdtSegmentDescriptor,
+    user_data_segment: GdtSegmentDescriptor,
+    user_code_segment: GdtSegmentDescriptor,
     task_state_segment: TaskStateSegment64Descriptor,
 }
-const _: () = assert!(size_of::<Gdt>() == 40);
+const _: () = assert!(size_of::<Gdt>() == 56);
 
 #[allow(dead_code)]
 pub struct GdtWrapper {
@@ -855,6 +861,8 @@ impl Default for GdtWrapper {
             null_segment: GdtSegmentDescriptor::null(),
             kernel_code_segment: GdtSegmentDescriptor::new(GdtAttr::KernelCode),
             kernel_data_segment: GdtSegmentDescriptor::new(GdtAttr::KernelData),
+            user_data_segment: GdtSegmentDescriptor::new(GdtAttr::UserData),
+            user_code_segment: GdtSegmentDescriptor::new(GdtAttr::UserCode),
             task_state_segment: TaskStateSegment64Descriptor::new(tss64.phys_addr()),
         };
         let gdt = Box::pin(gdt);
@@ -947,4 +955,24 @@ where
     let mut table = take_current_page_table();
     callback(&mut table);
     put_current_page_table(table);
+}
+
+pub unsafe fn jump_to_user_mode(rip: u64, rsp: u64) -> ! {
+    asm!(
+        "mov ds, ax",
+        "mov es, ax",
+        "mov fs, ax",
+        "mov gs, ax",
+        "push rax",       // SS
+        "push rsi",       // RSP
+        "push 0x202",   // RFLAGS (Interrupt Flag = 1)
+        "push rdx",      // CS
+        "push rdi",      // RIP
+        "iretq",
+        in("rdi") rip,
+        in("rsi") rsp,
+        in("rdx") USER_CS as u64,
+        in("rax") USER_DS as u64,
+        options(noreturn)
+    );
 }
