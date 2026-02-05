@@ -174,11 +174,7 @@ impl Pci {
             }
         }
     }
-    pub fn read_register_u32(
-        &self,
-        bdf: BusDeviceFunction,
-        byte_offset: usize,
-    ) -> Result<u32> {
+    pub fn read_register_u32(&self, bdf: BusDeviceFunction, byte_offset: usize) -> Result<u32> {
         ConfigRegisters::read(self.ecm_base(bdf), byte_offset)
     }
     pub fn write_register_u32(
@@ -189,11 +185,7 @@ impl Pci {
     ) -> Result<()> {
         ConfigRegisters::write(self.ecm_base(bdf), byte_offset, data)
     }
-    pub fn read_register_u64(
-        &self,
-        bdf: BusDeviceFunction,
-        byte_offset: usize,
-    ) -> Result<u64> {
+    pub fn read_register_u64(&self, bdf: BusDeviceFunction, byte_offset: usize) -> Result<u64> {
         let lo = self.read_register_u32(bdf, byte_offset)?;
         let hi = self.read_register_u32(bdf, byte_offset + 4)?;
         Ok(((hi as u64) << 32) | (lo as u64))
@@ -212,7 +204,7 @@ impl Pci {
     }
     pub fn try_bar0_mem64(&self, bdf: BusDeviceFunction) -> Result<BarMem64> {
         let bar0 = self.read_register_u64(bdf, 0x10)?;
-        if bar0 & 0b0111 == 0b0100 
+        if bar0 & 0b0111 == 0b0100
         /* Memory, 64bit, Non-prefetchable */
         {
             let addr = (bar0 & !0b1111) as *mut u8;
@@ -226,13 +218,8 @@ impl Pci {
             Err("Unexpected BAR0 Type")
         }
     }
-    pub fn set_command_and_status_flags(
-        &self,
-        bdf: BusDeviceFunction,
-        flags: u32,
-    ) -> Result<()> {
-        let cmd_and_status =
-            self.read_register_u32(bdf, 0x04 /* Command and status */)?;
+    pub fn set_command_and_status_flags(&self, bdf: BusDeviceFunction, flags: u32) -> Result<()> {
+        let cmd_and_status = self.read_register_u32(bdf, 0x04 /* Command and status */)?;
         self.write_register_u32(
             bdf,
             0x04, /* Command and status  */
@@ -240,16 +227,10 @@ impl Pci {
         )
     }
     pub fn enable_bus_master(&self, bdf: BusDeviceFunction) -> Result<()> {
-        self.set_command_and_status_flags(
-            bdf,
-            1 << 2, /* Bus Master Enable */
-        )
+        self.set_command_and_status_flags(bdf, 1 << 2 /* Bus Master Enable */)
     }
     pub fn disable_interrupt(&self, bdf: BusDeviceFunction) -> Result<()> {
-        self.set_command_and_status_flags(
-            bdf,
-            1 << 10, /* Interrupt Disable */
-        )
+        self.set_command_and_status_flags(bdf, 1 << 10 /* Interrupt Disable */)
     }
 }
 pub struct BarMem64 {
