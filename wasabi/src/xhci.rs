@@ -163,7 +163,7 @@ impl CapabilityRegisters {
             | extract_bits(self.hcsparams2.read(), 27, 5)) as usize
     }
     fn num_of_ports(&self) -> usize {
-        extract_bits(self.hccparams1.read(), 24, 8) as usize
+        extract_bits(self.hcsparams1.read(), 24, 8) as usize
     }
 }
 
